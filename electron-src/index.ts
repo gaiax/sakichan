@@ -25,6 +25,7 @@ app.on("ready", async () => {
       contextIsolation: false,
       preload: join(__dirname, "preload.js"),
     },
+    alwaysOnTop: true,
   });
 
   mainWindow.setMenu(null); //メニューバーの削除
