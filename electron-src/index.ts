@@ -42,39 +42,42 @@ app.on("ready", async () => {
 app.on("window-all-closed", app.quit);
 
 // listen the channel `message` and resend the received message to the renderer process
-ipcMain.on("message", (event: IpcMainEvent, params: {text: string, speaker: number}) => {
-  console.log(event);
-  console.log(params);
-  axios
-    .post(
-      "http://localhost:50021/audio_query",
-      {},
-      {
-        params,
-      }
-    )
-    .then(function (res: AxiosResponse) {
-      console.log(res.data);
-      axios
-        .post("http://localhost:50021/synthesis", res.data, {
-          params: {
-            speaker: params.speaker,
-            enable_interrogative_upspeak: "yes",
-          },
-          responseType: "arraybuffer",
-        })
-        .then(function (res: AxiosResponse) {
-          console.log(res.data.length); // res.dataが音声ファイルの中身
-          fs.writeFileSync(`./sound.wav`, Buffer.from(res.data), "binary");
-          playWav(`./sound.wav`);
-        })
-        .catch((e: AxiosError<{ error: string }>) => {
-          // エラー処理
-          console.log(e.message);
-        });
-    })
-    .catch((e: AxiosError<{ error: string }>) => {
-      // エラー処理
-      console.log(e.message);
-    });
-});
+ipcMain.on(
+  "message",
+  (event: IpcMainEvent, params: { text: string; speaker: number }) => {
+    console.log(event);
+    console.log(params);
+    axios
+      .post(
+        "http://localhost:50021/audio_query",
+        {},
+        {
+          params,
+        }
+      )
+      .then(function (res: AxiosResponse) {
+        console.log(res.data);
+        axios
+          .post("http://localhost:50021/synthesis", res.data, {
+            params: {
+              speaker: params.speaker,
+              enable_interrogative_upspeak: "yes",
+            },
+            responseType: "arraybuffer",
+          })
+          .then(function (res: AxiosResponse) {
+            console.log(res.data.length); // res.dataが音声ファイルの中身
+            fs.writeFileSync(`./sound.wav`, Buffer.from(res.data), "binary");
+            playWav(`./sound.wav`);
+          })
+          .catch((e: AxiosError<{ error: string }>) => {
+            // エラー処理
+            console.log(e.message);
+          });
+      })
+      .catch((e: AxiosError<{ error: string }>) => {
+        // エラー処理
+        console.log(e.message);
+      });
+  }
+);
