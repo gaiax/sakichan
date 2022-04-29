@@ -9,7 +9,6 @@ import {
   Col,
 } from "react-bootstrap";
 import { useRouter } from "next/router";
-import { WindowSize } from "../interfaces";
 
 const IndexPage = () => {
   const router = useRouter();
