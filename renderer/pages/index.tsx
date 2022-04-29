@@ -1,4 +1,4 @@
-import { ChangeEventHandler, useState } from "react";
+import { ChangeEventHandler, useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import {
   Button,
@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 const IndexPage = () => {
   const router = useRouter();
   const [text, setText] = useState("");
+  useEffect(() => {}, []);
   const onChangeInputText: ChangeEventHandler<HTMLInputElement> = (e) => {
     setText(e.target.value);
   };
@@ -25,7 +26,7 @@ const IndexPage = () => {
     });
   };
   const onClickSettings = () => {
-    router.push("/settings");
+    global.ipcRenderer.send("open-setting");
   };
 
   return (
