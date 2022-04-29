@@ -15,14 +15,16 @@ app.on("ready", async () => {
   await prepareNext("./renderer");
 
   const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 400,
+    height: 150,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: false,
       preload: join(__dirname, "preload.js"),
     },
   });
+
+  mainWindow.setMenu(null); //メニューバーの削除
 
   const url = isDev
     ? "http://localhost:8000/"

@@ -1,34 +1,47 @@
-import { useEffect } from 'react'
-import Link from 'next/link'
-import Layout from '../components/Layout'
+import { ChangeEventHandler, useState } from "react";
+import Layout from "../components/Layout";
+import {
+  Button,
+  ButtonGroup,
+  Form,
+  Container,
+  Row,
+  Col,
+} from "react-bootstrap";
 
 const IndexPage = () => {
-  useEffect(() => {
-    const handleMessage = (_event, args) => alert(args)
+  const [text, setText] = useState("");
+  const onChangeInputText: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setText(e.target.value);
+  };
 
-    // add a listener to 'message' channel
-    global.ipcRenderer.addListener('message', handleMessage)
-
-    return () => {
-      global.ipcRenderer.removeListener('message', handleMessage)
-    }
-  }, [])
-
-  const onSayHiClick = () => {
-    global.ipcRenderer.send('message', 'hi from next')
-  }
+  const onClickSay = () => {
+    global.ipcRenderer.send("message", text);
+  };
 
   return (
-    <Layout title="Home | Next.js + TypeScript + Electron Example">
-      <h1>Hello Next.js 👋</h1>
-      <button onClick={onSayHiClick}>Say hi to electron</button>
-      <p>
-        <Link href="/about">
-          <a>About</a>
-        </Link>
-      </p>
+    <Layout title="サキちゃん">
+      <Container fluid>
+        <Row className="mt-1">
+          <Form>
+            <Form.Control as="textarea" rows={2} onChange={onChangeInputText} />
+          </Form>
+        </Row>
+        <Row className="mt-1">
+          <Col>
+            <ButtonGroup>
+              <Button>1</Button>
+              <Button>2</Button>
+              <Button>3</Button>
+            </ButtonGroup>
+          </Col>
+          <Col className="text-end">
+            <Button onClick={onClickSay}>しゃべる</Button>
+          </Col>
+        </Row>
+      </Container>
     </Layout>
-  )
-}
+  );
+};
 
-export default IndexPage
+export default IndexPage;
