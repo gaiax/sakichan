@@ -42,19 +42,15 @@ app.on("ready", async () => {
 app.on("window-all-closed", app.quit);
 
 // listen the channel `message` and resend the received message to the renderer process
-ipcMain.on("message", (event: IpcMainEvent, message: any) => {
+ipcMain.on("message", (event: IpcMainEvent, params: {text: string, speaker: number}) => {
   console.log(event);
-  console.log(message);
-
+  console.log(params);
   axios
     .post(
       "http://localhost:50021/audio_query",
       {},
       {
-        params: {
-          speaker: 9,
-          text: message,
-        },
+        params,
       }
     )
     .then(function (res: AxiosResponse) {
@@ -62,7 +58,7 @@ ipcMain.on("message", (event: IpcMainEvent, message: any) => {
       axios
         .post("http://localhost:50021/synthesis", res.data, {
           params: {
-            speaker: 9,
+            speaker: params.speaker,
             enable_interrogative_upspeak: "yes",
           },
           responseType: "arraybuffer",
