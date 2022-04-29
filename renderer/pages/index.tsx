@@ -16,9 +16,13 @@ const IndexPage = () => {
   const onChangeInputText: ChangeEventHandler<HTMLInputElement> = (e) => {
     setText(e.target.value);
   };
+  const [speaker, setSpeaker] = useState(9);
 
   const onClickSay = () => {
-    global.ipcRenderer.send("message", text);
+    global.ipcRenderer.send("message", {
+      text: text,
+      speaker: speaker,
+    });
   };
   const onClickSettings = () => {
     router.push("/settings");
