@@ -6,7 +6,7 @@ import { Buffer } from "buffer";
 import axios, { AxiosResponse, AxiosError } from "axios";
 
 // Packages
-import { BrowserWindow, app, ipcMain } from "electron";
+import { BrowserWindow, app, ipcMain, IpcMainEvent } from "electron";
 import isDev from "electron-is-dev";
 import prepareNext from "electron-next";
 
@@ -39,13 +39,14 @@ app.on("ready", async () => {
 app.on("window-all-closed", app.quit);
 
 // listen the channel `message` and resend the received message to the renderer process
-ipcMain.on('message', (message: any) => {
-  console.log(message)
+ipcMain.on('message', (event: IpcMainEvent, message: any) => {
+  console.log(event);
+  console.log(message);
 
   axios.post('http://localhost:50021/audio_query', {}, {
     params: {
       speaker: 1,
-      text: "test"
+      text: message
     }
   })
     .then(function (res: AxiosResponse) {
