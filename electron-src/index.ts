@@ -9,6 +9,7 @@ import axios, { AxiosResponse, AxiosError } from "axios";
 import { BrowserWindow, app, ipcMain, IpcMainEvent } from "electron";
 import isDev from "electron-is-dev";
 import prepareNext from "electron-next";
+import { playWav } from "./audio/player";
 
 // Prepare the renderer once the app is ready
 app.on("ready", async () => {
@@ -47,7 +48,7 @@ ipcMain.on('message', (event: IpcMainEvent, message: any) => {
 
   axios.post('http://localhost:50021/audio_query', {}, {
     params: {
-      speaker: 1,
+      speaker: 9,
       text: message
     }
   })
@@ -55,7 +56,7 @@ ipcMain.on('message', (event: IpcMainEvent, message: any) => {
       console.log(res.data);
       axios.post('http://localhost:50021/synthesis', res.data, {
         params: {
-          speaker: "1",
+          speaker: 9,
           enable_interrogative_upspeak: "yes",
         },
         responseType: 'arraybuffer'
@@ -63,6 +64,7 @@ ipcMain.on('message', (event: IpcMainEvent, message: any) => {
         .then(function (res: AxiosResponse) {
           console.log(res.data.length);// res.dataが音声ファイルの中身
           fs.writeFileSync(`./sound.wav`, Buffer.from(res.data), 'binary');
+          playWav(`./sound.wav`);
         })
         .catch((e: AxiosError<{ error: string }>) => {
           // エラー処理
