@@ -86,10 +86,30 @@ ipcMain.on("message", (event: IpcMainEvent, message: any) => {
     });
 });
 
-ipcMain.on(
-  "change-window-size",
-  (event: IpcMainEvent, windowSize: { height: number; width: number }) => {
-    console.log(event);
-    mainWindow.setSize(windowSize.width, windowSize.height);
-  }
-);
+ipcMain.on("open-setting", (event: IpcMainEvent) => {
+  console.log(event);
+  const settingWindow = new BrowserWindow({
+    parent: mainWindow,
+    width: 400,
+    height: 400,
+    useContentSize: true,
+    resizable: false,
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: false,
+      preload: join(__dirname, "preload.js"),
+    },
+    alwaysOnTop: true,
+  });
+  settingWindow.setMenu(null); //メニューバーの削除
+
+  const url = isDev
+    ? "http://localhost:8000/settings"
+    : format({
+        pathname: join(__dirname, "../renderer/out/settings.html"),
+        protocol: "file:",
+        slashes: true,
+      });
+
+  settingWindow.loadURL(url);
+});

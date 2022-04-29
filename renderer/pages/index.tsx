@@ -1,4 +1,4 @@
-import { ChangeEventHandler, useState } from "react";
+import { ChangeEventHandler, useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import {
   Button,
@@ -9,10 +9,12 @@ import {
   Col,
 } from "react-bootstrap";
 import { useRouter } from "next/router";
+import { WindowSize } from "../interfaces";
 
 const IndexPage = () => {
   const router = useRouter();
   const [text, setText] = useState("");
+  useEffect(() => {}, []);
   const onChangeInputText: ChangeEventHandler<HTMLInputElement> = (e) => {
     setText(e.target.value);
   };
@@ -21,7 +23,7 @@ const IndexPage = () => {
     global.ipcRenderer.send("message", text);
   };
   const onClickSettings = () => {
-    router.push("/settings");
+    global.ipcRenderer.send("open-setting");
   };
 
   return (
