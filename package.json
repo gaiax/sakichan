@@ -13,6 +13,7 @@
     "type-check": "tsc -p ./renderer/tsconfig.json && tsc -p ./electron-src/tsconfig.json"
   },
   "dependencies": {
+    "axios": "^0.27.2",
     "electron-is-dev": "^1.1.0",
     "electron-next": "^3.1.5",
     "react": "^17.0.2",
